@@ -1,5 +1,12 @@
 module BinaryClassifierEvaluation
 
-# package code goes here
+include("State.jl");
 
-end # module
+include("Thresholds.jl");
+
+include("MixedResult.jl");
+include("NegativeResult.jl");
+
+include("Result.jl");
+
+end
