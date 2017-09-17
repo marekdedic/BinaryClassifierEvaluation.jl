@@ -66,5 +66,5 @@ function vcat(results::NegativeResult...)::NegativeResult
 	for i in 1:length(PP)
 		PP[i] = mapreduce(x->x.PP[i], +, results);
 	end
-	return NegativeResult(results[1].thresholds, PP);
+	return NegativeResult(results[1].thresholds, RN, PP);
 end
