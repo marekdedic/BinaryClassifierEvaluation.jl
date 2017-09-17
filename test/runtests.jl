@@ -1,5 +1,14 @@
 using BinaryClassifierEvaluation
 using Base.Test
 
-# write your own tests here
-@test 1 == 2
+include("PRcurve.jl");
+
+@testset "All" begin 
+	@testset "PR curve" begin
+		@testset "Partial PR curve" begin
+			for i in 1:25000
+				@test PRcurvePartial();
+			end
+		end
+	end
+end

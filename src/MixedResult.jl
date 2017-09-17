@@ -1,8 +1,8 @@
-import Base.vcat;
+import Base.vcat, Base.+;
 
 export MixedResult, evaluate, vcat;
 
-struct MixedResult{A<:AbstractFloat}
+mutable struct MixedResult{A<:AbstractFloat}
 	thresholds::Vector{A};
 	RP::Int; # Real-positive count
 	RN::Int; # Real-negative count
@@ -58,6 +58,7 @@ function evaluate(result::MixedResult, state::State)::Void
 	end
 	result.PP[THcounter:end] .= 0;
 	result.TP[THcounter:end] .= 0;
+	return;
 end
 
 function MixedResult(thresholds::Thresholds, state::State)::MixedResult

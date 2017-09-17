@@ -1,8 +1,8 @@
-import Base.vcat
+import Base.vcat, Base.+;
 
 export NegativeResult, evaluate, vcat;
 
-struct NegativeResult{A<:AbstractFloat}
+mutable struct NegativeResult{A<:AbstractFloat}
 	thresholds::Vector{A};
 	RN::Int; # Real-negative count
 	PP::Vector{Int} # Predicted-positive count for each threshold
@@ -42,6 +42,7 @@ function evaluate(result::NegativeResult, state::State)::Void
 		end
 	end
 	result.PP[THcounter:end] .= 0;
+	return;
 end
 
 function NegativeResult(thresholds::Thresholds, state::State)::NegativeResult
