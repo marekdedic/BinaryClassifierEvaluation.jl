@@ -8,7 +8,7 @@ export TPR, sensitivity, fallout, TNR, PPV;
 export plotPRcurve, plotFscore, plotROCcurve, plotDETcurve;
 
 struct Result{A<:AbstractFloat}
-	thresholds::Vector{A};
+	thresholds::Thresholds{A};
 	RP::Int;
 	RN::Int;
 	PP::Vector{Int};

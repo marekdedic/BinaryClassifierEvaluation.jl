@@ -3,14 +3,14 @@ import Base.vcat, Base.+;
 export NegativeResult, evaluate, vcat;
 
 mutable struct NegativeResult{A<:AbstractFloat}
-	thresholds::Vector{A};
+	thresholds::Thresholds{A};
 	RN::Int; # Real-negative count
 	PP::Vector{Int} # Predicted-positive count for each threshold
 end
 
 function NegativeResult(thresholds::Thresholds)::NegativeResult
-	PP = Vector{Int}(length(thresholds.thresholds));
-	return NegativeResult(thresholds.thresholds, 0, PP);
+	PP = Vector{Int}(length(thresholds));
+	return NegativeResult(thresholds, 0, PP);
 end
 
 function evaluate(result::NegativeResult, state::State)::Void

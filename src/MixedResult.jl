@@ -3,7 +3,7 @@ import Base.vcat, Base.+;
 export MixedResult, evaluate, vcat;
 
 mutable struct MixedResult{A<:AbstractFloat}
-	thresholds::Vector{A};
+	thresholds::Thresholds{A};
 	RP::Int; # Real-positive count
 	RN::Int; # Real-negative count
 	PP::Vector{Int}; # Predicted-postive count for each threshold
@@ -11,9 +11,9 @@ mutable struct MixedResult{A<:AbstractFloat}
 end
 
 function MixedResult(thresholds::Thresholds)::MixedResult
-	PP = Vector{Int}(length(thresholds.thresholds));
-	TP = Vector{Int}(length(thresholds.thresholds));
-	return MixedResult(thresholds.thresholds, 0, 0, PP, TP);
+	PP = Vector{Int}(length(thresholds));
+	TP = Vector{Int}(length(thresholds));
+	return MixedResult(thresholds, 0, 0, PP, TP);
 end
 
 function evaluate(result::MixedResult, state::State)::Void
