@@ -9,4 +9,6 @@ include("NegativeResult.jl");
 
 include("Result.jl");
 
+include("facade.jl");
+
 end

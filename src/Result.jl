@@ -23,22 +23,6 @@ function Result(mresult::MixedResult, nresult::NegativeResult)::Result
 	return Result(mresult.thresholds, mresult.RP, mresult.RN + nresult.RN, mresult.PP .+ nresult.PP, mresult.TP);
 end
 
-# Complete Ctors
-
-function Result{T<:AbstractFloat}(mixed; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
-	mixedResultVec = map(s->MixedResult(thresholds, s), mixed);
-	mixedResult = vcat(mixedResultVec...);
-	return Result(mixedResult);
-end
-
-function Result{T<:AbstractFloat}(mixed, negative; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
-	mixedResultVec = map(s->MixedResult(thresholds, s), mixed);
-	mixedResult = vcat(mixedResultVec...);
-	negativeResultVec = map(s->NegativeResult(thresholds, s), negative);
-	negativeResult = vcat(negativeResultVec...);
-	return Result(mixedResult, negativeResult);
-end
-
 # Values
 
 function RP(result::Result)::Int # Real positives

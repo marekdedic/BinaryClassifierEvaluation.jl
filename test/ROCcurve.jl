@@ -9,7 +9,7 @@ function ROCcurvePartial():Bool
 	TPRML = map(r->true_positive_rate(r), rocvec);
 	FPRML = map(r->false_positive_rate(r), rocvec);
 	state = State(predicted, real);
-	result = Result([state]);
+	result = evaluate([state]);
 	precisionResult = minimum((TPRML .- TPR(result)) .< 0.01);
 	recallResult = minimum((FPRML .- FPR(result)) .< 0.01);
 
@@ -28,7 +28,7 @@ function ROCcurveFull():Bool
 	FPRML = map(r->false_positive_rate(r), rocvec);
 	state1 = State(predicted1, real1);
 	state2 = State(predicted2, real2);
-	result = Result([state1], [state2]);
+	result = evaluate([state1], [state2]);
 	precisionResult = minimum((TPRML .- TPR(result)) .< 0.01);
 	recallResult = minimum((FPRML .- FPR(result)) .< 0.01);
 

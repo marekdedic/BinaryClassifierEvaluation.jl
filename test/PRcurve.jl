@@ -9,7 +9,7 @@ function PRcurvePartial()::Bool
 	precisionML = map(r->precision(r), rocvec);
 	recallML = map(r->recall(r), rocvec);
 	state = State(predicted, real);
-	result = Result([state]);
+	result = evaluate([state]);
 	precisionResult = minimum((precisionML .- precision(result)) .< 0.01);
 	recallResult = minimum((recallML .- recall(result)) .< 0.01);
 
@@ -28,7 +28,7 @@ function PRcurveFull()::Bool
 	recallML = map(r->recall(r), rocvec);
 	state1 = State(predicted1, real1);
 	state2 = State(predicted2, real2);
-	result = Result([state1], [state2]);
+	result = evaluate([state1], [state2]);
 	precisionResult = minimum((precisionML .- precision(result)) .< 0.01);
 	recallResult = minimum((recallML .- recall(result)) .< 0.01);
 
