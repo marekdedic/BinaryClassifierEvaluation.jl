@@ -25,15 +25,13 @@ end
 
 # Complete Ctors
 
-function Result{T<:AbstractFloat}(mixed::Vector{State{T}}; thresholdCount::Int = 100)::Result
-	thresholds = Thresholds(mixed);
+function Result{T<:AbstractFloat}(mixed; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
 	mixedResultVec = map(s->MixedResult(thresholds, s), mixed);
 	mixedResult = vcat(mixedResultVec...);
 	return Result(mixedResult);
 end
 
-function Result{T<:AbstractFloat}(mixed::Vector{State{T}}, negative::Vector{State{T}}; thresholdCount::Int = 100)::Result
-	thresholds = Thresholds(mixed);
+function Result{T<:AbstractFloat}(mixed, negative; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
 	mixedResultVec = map(s->MixedResult(thresholds, s), mixed);
 	mixedResult = vcat(mixedResultVec...);
 	negativeResultVec = map(s->NegativeResult(thresholds, s), negative);
