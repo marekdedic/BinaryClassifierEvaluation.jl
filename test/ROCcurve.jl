@@ -1,5 +1,4 @@
 using MLBase;
-using StatsBase;
 using Plots;
 
 function ROCcurvePartial(;threaded::Bool = false):Bool

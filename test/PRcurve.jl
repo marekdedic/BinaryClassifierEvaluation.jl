@@ -1,5 +1,4 @@
 using MLBase;
-using StatsBase;
 using Plots;
 
 function PRcurvePartial(;threaded::Bool = false)::Bool
