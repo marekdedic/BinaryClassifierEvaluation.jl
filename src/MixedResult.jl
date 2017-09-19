@@ -1,6 +1,6 @@
 import Base.vcat, Base.+;
 
-export MixedResult, evaluate, vcat;
+export MixedResult, process, vcat;
 
 mutable struct MixedResult{A<:AbstractFloat}
 	thresholds::Thresholds{A};
@@ -16,7 +16,7 @@ function MixedResult(thresholds::Thresholds)::MixedResult
 	return MixedResult(thresholds, 0, 0, PP, TP);
 end
 
-function evaluate(result::MixedResult, state::State)::Void
+function process(result::MixedResult, state::State)::Void
 	if length(state.predicted) == 0
 		return;
 	end
@@ -63,7 +63,7 @@ end
 
 function MixedResult(thresholds::Thresholds, state::State)::MixedResult
 	result = MixedResult(thresholds);
-	evaluate(result, state);
+	process(result, state);
 	return result;
 end
 
@@ -72,7 +72,7 @@ function +(result::MixedResult, state::State)::MixedResult
 	RN = deepcopy(result.RN);
 	PP = deepcopy(result.PP);
 	TP = deepcopy(result.TP);
-	evaluate(result, state);
+	process(result, state);
 	result.RP += RP;
 	result.RN += RN;
 	result.PP .+= PP;

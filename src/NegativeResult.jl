@@ -1,6 +1,6 @@
 import Base.vcat, Base.+;
 
-export NegativeResult, evaluate, vcat;
+export NegativeResult, process, vcat;
 
 mutable struct NegativeResult{A<:AbstractFloat}
 	thresholds::Thresholds{A};
@@ -13,7 +13,7 @@ function NegativeResult(thresholds::Thresholds)::NegativeResult
 	return NegativeResult(thresholds, 0, PP);
 end
 
-function evaluate(result::NegativeResult, state::State)::Void
+function process(result::NegativeResult, state::State)::Void
 	if length(state.predicted) == 0
 		return;
 	end
@@ -47,14 +47,14 @@ end
 
 function NegativeResult(thresholds::Thresholds, state::State)::NegativeResult
 	result = NegativeResult(thresholds);
-	evaluate(result, state);
+	process(result, state);
 	return result;
 end
 
 function +(result::NegativeResult, state::State)::NegativeResult
 	PP = deepcopy(result.PP);
 	RN = deepcopy(result.RN);
-	evaluate(result, state);
+	process(result, state);
 	result.PP .+= PP;
 	result.RN += RN;
 	return result;
