@@ -1,13 +1,14 @@
 import Plots;
+import Base.+, Base.vcat;
 import MLBase.precision, MLBase.recall;
 
-export Result;
+export Result, +, vcat;
 export RP, RN, PP, PN, TP, FP, FN, TN;
 export population, prevalence, accuracy, precision, recall, FNR, FPR, specificity, FDR, FOR, NPV, PLR, NLR, DOR, Fscore;
 export TPR, sensitivity, fallout, TNR, PPV;
 export plotPRcurve, plotFscore, plotROCcurve, plotDETcurve;
 
-struct Result{A<:AbstractFloat}
+mutable struct Result{A<:AbstractFloat}
 	thresholds::Thresholds{A};
 	RP::Int;
 	RN::Int;
@@ -15,12 +16,55 @@ struct Result{A<:AbstractFloat}
 	TP::Vector{Int};
 end
 
-function Result(result::MixedResult)::Result
-	return Result(result.thresholds, result.RP, result.RN, result.PP, result.TP);
+# Ctors
+
+function Result(thresholds::Thresholds)::Result
+	PP = zeros(Int, length(thresholds));
+	TP = zeros(Int, length(thresholds));
+	return Result(thresholds, 0, 0, PP, TP);
 end
 
-function Result(mresult::MixedResult, nresult::NegativeResult)::Result
-	return Result(mresult.thresholds, mresult.RP, mresult.RN + nresult.RN, mresult.PP .+ nresult.PP, mresult.TP);
+function Result(thresholds::Thresholds, state::State)::Result
+	result = Result(thresholds);
+	process(result, state);
+	return result;
+end
+
+# Processing
+
+function process(result::Result, state::State)::Void
+	if maximum(state.real) == 0
+		process_negative(result, state);
+	else
+		process_mixed(result, state);
+	end
+	return;
+end
+
+function +(result::Result, state::State)::Result
+	RP = deepcopy(result.RP);
+	RN = deepcopy(result.RN);
+	PP = deepcopy(result.PP);
+	TP = deepcopy(result.TP);
+	process(result, state);
+	result.RP += RP;
+	result.RN += RN;
+	result.PP .+= PP;
+	result.TP .+= TP;
+	return result;
+end
+
+function vcat(results::Result...)::Result
+	len = length(results[1].thresholds);
+	RP = mapreduce(x->x.RP, +, results);
+	RN = mapreduce(x->x.RN, +, results);
+	TP = Vector{Int}(len);
+	PP = Vector{Int}(len);
+	for i in 1:len
+		PP[i] = mapreduce(x->x.PP[i], +, results);
+		TP[i] = mapreduce(x->x.TP[i], +, results);
+	end
+	return Result(results[1].thresholds, RP, RN, PP, TP);
 end
 
 # Values

@@ -1,24 +1,18 @@
 import ThreadedMap;
 export evaluate, evaluate_threaded;
 
-function evaluate{T<:AbstractArray}(mixed::T; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
-	result = mapreduce(s->MixedResult(thresholds, s), vcat, mixed);
-	return Result(result);
+function evaluate{T<:AbstractArray}(states::T; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(states))::Result
+	return mapreduce(s->Result(thresholds, s), vcat, states);
 end
 
-function evaluate{T<:AbstractArray, U<:AbstractArray}(mixed::T, negative::U; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
-	mixedResult = mapreduce(s->MixedResult(thresholds, s), vcat, mixed);
-	negativeResult = mapreduce(s->NegativeResult(thresholds, s), vcat, negative);
-	return Result(mixedResult, negativeResult);
+function evaluate{T<:AbstractArray}(mixedStates::T, negativeStates::T; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixedStates))::Result
+	return mapreduce(s->Result(thresholds, s), vcat, vcat(mixedStates, negativeStates));
 end
 
-function evaluate_threaded{T<:AbstractArray}(mixed::T; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
-	result = ThreadedMap.tmaptreduce(s->MixedResult(thresholds, s), vcat, mixed);
-	return Result(result);
+function evaluate_threaded{T<:AbstractArray}(states::T; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(states))::Result
+	return ThreadedMap.tmaptreduce(s->Result(thresholds, s), vcat, states);
 end
 
-function evaluate_threaded{T<:AbstractArray, U<:AbstractArray}(mixed::T, negative::U; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixed))::Result
-	mixedResult = ThreadedMap.tmaptreduce(s->MixedResult(thresholds, s), vcat, mixed);
-	negativeResult = ThreadedMap.tmaptreduce(s->NegativeResult(thresholds, s), vcat, negative);
-	return Result(mixedResult, negativeResult);
+function evaluate_threaded{T<:AbstractArray}(mixedStates::T, negativeStates::T; thresholdCount::Int = 100, thresholds::Thresholds = Thresholds(mixedStates))::Result
+	return ThreadedMap.tmaptreduce(s->Result(thresholds, s), vcat, vcat(mixedStates, negativeStates));
 end
