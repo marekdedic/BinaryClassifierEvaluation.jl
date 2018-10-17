@@ -1,6 +1,3 @@
-using MLBase;
-using Plots;
-
 function PRcurvePartial(;threaded::Bool = false)::Bool
 	real = rand(0:1, 1024);
 	predicted = rand(Float32, 1024);

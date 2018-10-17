@@ -1,5 +1,7 @@
-using BinaryClassifierEvaluation
-using Base.Test
+using BinaryClassifierEvaluation;
+using Test;
+
+using MLBase;
 
 include("PRcurve.jl");
 include("ROCcurve.jl");

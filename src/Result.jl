@@ -32,7 +32,7 @@ end
 
 # Processing
 
-function process(result::Result, state::State)::Void
+function process(result::Result, state::State)::Nothing
 	if maximum(state.real) == 0
 		process_negative(result, state);
 	else
@@ -58,8 +58,8 @@ function vcat(results::Result...)::Result
 	len = length(results[1].thresholds);
 	RP = mapreduce(x->x.RP, +, results);
 	RN = mapreduce(x->x.RN, +, results);
-	TP = Vector{Int}(len);
-	PP = Vector{Int}(len);
+	TP = Vector{Int}(undef, len);
+	PP = Vector{Int}(undef, len);
 	for i in 1:len
 		PP[i] = mapreduce(x->x.PP[i], +, results);
 		TP[i] = mapreduce(x->x.TP[i], +, results);
@@ -179,7 +179,7 @@ PPV(result::Result)::Vector = precision(result); # Positive predictive value
 
 # Plotting
 
-function plotPRcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; title::AbstractString = "")::Void
+function plotPRcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; title::AbstractString = "")::Nothing
 	lims = (0, 1.05);
 	Plots.plot(; xlabel = "Recall", ylabel = "Precision", xlims = lims, ylims = lims, title = title)
 	pl(label, result) = Plots.plot!(recall(result), precision(result); label = label);
@@ -188,9 +188,9 @@ function plotPRcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, res
 	return;
 end
 
-plotPRcurve(result::Result; title::AbstractString = "")::Void = plotPRcurve(["PR Curve"], [result]; title = title);
+plotPRcurve(result::Result; title::AbstractString = "")::Nothing = plotPRcurve(["PR Curve"], [result]; title = title);
 
-function plotFscore{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; beta::AbstractFloat = 1.0, title::AbstractString = "")::Void
+function plotFscore{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; beta::AbstractFloat = 1.0, title::AbstractString = "")::Nothing
 	Plots.plot(; xlabel = "Threshold", ylabel = "F" * string(beta) * " score", ylims = (0, 1.05), title = title)
 	pl(label, result) = Plots.plot!(result.thresholds, Fscore(result; beta = beta); label = label);
 	pl.(labels, curves);
@@ -198,9 +198,9 @@ function plotFscore{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, resu
 	return;
 end
 
-plotFscore(result::Result; beta::AbstractFloat = 1.0, title::AbstractString = "")::Void = plotFscore(["F" * string(beta) * " score"], [result]; beta = beta, title = title);
+plotFscore(result::Result; beta::AbstractFloat = 1.0, title::AbstractString = "")::Nothing = plotFscore(["F" * string(beta) * " score"], [result]; beta = beta, title = title);
 
-function plotROCcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; log::Bool = false, title::AbstractString = "")::Void
+function plotROCcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; log::Bool = false, title::AbstractString = "")::Nothing
 	lims = (0, 1);
 	if log
 		Plots.plot(0.001:0.001:1, 0.001:0.001:1; linestyle= :dot, label = "", xlabel = "False positive rate", ylabel = "True positive rate", xlims = (0.001, 1), ylims = lims, xscale = :log10, title = title);
@@ -213,9 +213,9 @@ function plotROCcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, re
 	return;
 end
 
-plotROCcurve(result::Result; log::Bool = false, title::AbstractString = "")::Void = plotROCcurve(["ROC curve"], [result]; log = log, title = title);
+plotROCcurve(result::Result; log::Bool = false, title::AbstractString = "")::Nothing = plotROCcurve(["ROC curve"], [result]; log = log, title = title);
 
-function plotDETcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; title::AbstractString = "")::Void
+function plotDETcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, results::Vector{Result{T}}; title::AbstractString = "")::Nothing
 	qnorm(x) = sqrt(2) * erfinv(2x - 1);
 	lims = (qnorm(0.001), qnorm(0.55));
 	tickvalues = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 40, 50];
@@ -227,4 +227,4 @@ function plotDETcurve{S<:AbstractString, T<:AbstractFloat}(labels::Vector{S}, re
 	return;
 end
 
-plotDETcurve(result::Result; title::AbstractString = "")::Void = plotDETcurve(["DET Curve"], [result]; title = title);
+plotDETcurve(result::Result; title::AbstractString = "")::Nothing = plotDETcurve(["DET Curve"], [result]; title = title);

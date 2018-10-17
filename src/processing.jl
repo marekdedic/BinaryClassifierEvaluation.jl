@@ -37,8 +37,8 @@ function process_mixed(result::Result, state::State)
 	perm = sortperm(state.predicted);
 	predicted = state.predicted[perm];
 	real = state.real[perm];
-	result.RP = countnz(real .== 1);
-	result.RN = countnz(real .== 0);
+	result.RP = count(real .== 1);
+	result.RN = count(real .== 0);
 	TPcounter = result.RP;
 	THcounter = 1;
 	len = length(predicted);

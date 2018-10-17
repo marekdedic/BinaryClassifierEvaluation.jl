@@ -1,4 +1,5 @@
 import Base.size, Base.getindex;
+import Statistics.quantile;
 
 export Thresholds;
 
@@ -6,7 +7,7 @@ struct Thresholds{A<:AbstractFloat} <: AbstractVector{A}
 	thresholds::Vector{A};
 end
 
-function Thresholds{T<:AbstractFloat}(states::Vector{State{T}}; thresholdCount::Int = 100)::Thresholds
+function Thresholds(states::Vector{State{T}}; thresholdCount::Int = 100)::Thresholds where T<:AbstractFloat
 	return Thresholds(quantile(mapreduce(x->x.predicted, vcat, states), (0:thresholdCount)/thresholdCount));
 end
 
