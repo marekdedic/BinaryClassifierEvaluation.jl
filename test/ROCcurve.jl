@@ -1,4 +1,4 @@
-function ROCcurvePartial(;threaded::Bool = false):Bool
+function ROCcurvePartial(;threaded::Bool = false)::Bool
 	real = rand(0:1, 1024);
 	predicted = rand(Float32, 1024);
 	rocvec = roc(real, predicted, nquantile(predicted, 100));
@@ -14,7 +14,7 @@ function ROCcurvePartial(;threaded::Bool = false):Bool
 	return precisionResult && recallResult;
 end
 
-function ROCcurveFull(;threaded::Bool = false):Bool
+function ROCcurveFull(;threaded::Bool = false)::Bool
 	real1 = rand(0:1, 1024);
 	predicted1 = rand(Float32, 1024);
 	real2 = zeros(Int, 1024);
