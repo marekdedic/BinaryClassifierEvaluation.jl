@@ -248,7 +248,7 @@ uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 [[ThreadedMap]]
 git-tree-sha1 = "e3a756d39d7305a5e7daa417e6bdc05eff2aac55"
 repo-rev = "master"
-repo-url = "https://github.com/GenaBitu/ThreadedMap.jl.git"
+repo-url = "https://github.com/marekdedic/ThreadedMap.jl.git"
 uuid = "11d239b0-c0b9-11e8-1935-d5cfa53abb03"
 version = "0.1.0"
 
