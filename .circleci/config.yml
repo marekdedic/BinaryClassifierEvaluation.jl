@@ -15,6 +15,21 @@ job-references:
     docker:
       - image: julia:latest
 
+  restore_julia: &restore_julia
+    keys:
+      - deps-{{ checksum "Manifest.toml" }}
+      - deps-
+
+  install_julia: &install_julia
+    name: Install Julia dependencies
+    command: julia --project -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+
+  save_julia: &save_julia
+    key: deps-{{ checksum "Manifest.toml" }}
+    paths:
+      - ~/.julia/compiled
+      - ~/.julia/packages
+
 jobs:
   unit:
     <<: *env
@@ -25,11 +40,14 @@ jobs:
             apt-get update
             apt-get install -y git
       - checkout
+
+      - restore_cache: *restore_julia
+      - run: *install_julia
+      - save_cache: *save_julia
+
       - run:
           name: Run Tests
-          command: |
-            julia --project -e 'using Pkg;Pkg.instantiate()'
-            julia --project --code-coverage=user test/runtests.jl
+          command: julia --project --code-coverage=user test/runtests.jl
       - run:
           name: Upload Coverage Results
           command: julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
