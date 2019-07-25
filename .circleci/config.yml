@@ -22,7 +22,7 @@ job-references:
 
   install_julia: &install_julia
     name: Install Julia dependencies
-    command: julia --project -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+    command: julia --project -e 'using Pkg; Pkg.instantiate()'
 
   save_julia: &save_julia
     key: deps-{{ checksum "Manifest.toml" }}
