@@ -41,15 +41,29 @@ job-references:
     name: Install Julia dependencies
     command: julia --project -e 'using Pkg; Pkg.instantiate()'
 
-  install_julia_in_docs: &install_julia_in_docs
-    name: Install Julia dependencies
-    command: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
-
   save_julia: &save_julia
     key: deps-{{ checksum "Manifest.toml" }}
     paths:
       - ~/.julia/compiled
       - ~/.julia/packages
+      - ~/.julia/registries
+
+  restore_julia_in_docs: &restore_julia_in_docs
+    keys:
+      - deps-{{ checksum "Manifest.toml" }}-{{ checksum "docs/Manifest.toml" }}
+      - deps-{{ checksum "Manifest.toml" }}
+      - deps-
+
+  install_julia_in_docs: &install_julia_in_docs
+    name: Install Julia dependencies
+    command: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+
+  save_julia_in_docs: &save_julia_in_docs
+    key: deps-{{ checksum "Manifest.toml" }}-{{ checksum "docs/Manifest.toml" }}
+    paths:
+      - ~/.julia/compiled
+      - ~/.julia/packages
+      - ~/.julia/registries
 
 jobs:
   unit:
@@ -82,9 +96,9 @@ jobs:
             apt-get install -y git
       - checkout
 
-      - restore_cache: *restore_julia
+      - restore_cache: *restore_julia_in_docs
       - run: *install_julia_in_docs
-      - save_cache: *save_julia
+      - save_cache: *save_julia_in_docs
 
       - run:
           name: Build documentation
@@ -108,9 +122,9 @@ jobs:
             apt-get install -y git
       - checkout
 
-      - restore_cache: *restore_julia
+      - restore_cache: *restore_julia_in_docs
       - run: *install_julia_in_docs
-      - save_cache: *save_julia
+      - save_cache: *save_julia_in_docs
 
       - attach_workspace:
           at: docs/build
