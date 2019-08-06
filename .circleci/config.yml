@@ -50,7 +50,7 @@ job-references:
 
   restore_julia_in_docs: &restore_julia_in_docs
     keys:
-      - deps-{{ checksum "Manifest.toml" }}-{{ checksum "docs/Manifest.toml" }}
+      - deps-{{ checksum "Manifest.toml" }}-{{ checksum "docs/Project.toml" }}
       - deps-{{ checksum "Manifest.toml" }}
       - deps-
 
@@ -59,7 +59,7 @@ job-references:
     command: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
 
   save_julia_in_docs: &save_julia_in_docs
-    key: deps-{{ checksum "Manifest.toml" }}-{{ checksum "docs/Manifest.toml" }}
+    key: deps-{{ checksum "Manifest.toml" }}-{{ checksum "docs/Project.toml" }}
     paths:
       - ~/.julia/compiled
       - ~/.julia/packages
