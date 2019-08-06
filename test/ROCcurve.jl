@@ -1,11 +1,11 @@
-function ROCcurvePartial(;threaded::Bool = false)::Bool
+function ROCcurvePartial()::Bool
 	real = rand(0:1, 1024);
 	predicted = rand(Float32, 1024);
 	rocvec = roc(real, predicted, nquantile(predicted, 100));
 	TPRML = map(r->true_positive_rate(r), rocvec);
 	FPRML = map(r->false_positive_rate(r), rocvec);
 	state = State(predicted, real);
-	result = threaded ? evaluate_threaded([state]) : evaluate([state]);
+	result = evaluate([state]);
 	precisionResult = minimum((TPRML .- TPR(result)) .< 0.01);
 	recallResult = minimum((FPRML .- FPR(result)) .< 0.01);
 
@@ -14,7 +14,7 @@ function ROCcurvePartial(;threaded::Bool = false)::Bool
 	return precisionResult && recallResult;
 end
 
-function ROCcurveFull(;threaded::Bool = false)::Bool
+function ROCcurveFull()::Bool
 	real1 = rand(0:1, 1024);
 	predicted1 = rand(Float32, 1024);
 	real2 = zeros(Int, 1024);
@@ -24,7 +24,7 @@ function ROCcurveFull(;threaded::Bool = false)::Bool
 	FPRML = map(r->false_positive_rate(r), rocvec);
 	state1 = State(predicted1, real1);
 	state2 = State(predicted2, real2);
-	result = threaded ? evaluate_threaded([state1], [state2]) : evaluate([state1], [state2]);
+	result = evaluate([state1], [state2]);
 	precisionResult = minimum((TPRML .- TPR(result)) .< 0.01);
 	recallResult = minimum((FPRML .- FPR(result)) .< 0.01);
 
