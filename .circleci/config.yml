@@ -41,6 +41,10 @@ job-references:
     name: Install Julia dependencies
     command: julia --project -e 'using Pkg; Pkg.instantiate()'
 
+  install_julia_in_docs: &install_julia_in_docs
+    name: Install Julia dependencies
+    command: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+
   save_julia: &save_julia
     key: deps-{{ checksum "Manifest.toml" }}
     paths:
@@ -77,11 +81,14 @@ jobs:
             apt-get update
             apt-get install -y git
       - checkout
+
+      - restore_cache: *restore_julia
+      - run: *install_julia
+      - save_cache: *save_julia
+
       - run:
           name: Build documentation
-          command: |
-            julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd()));Pkg.instantiate()'
-            julia --project=docs/ docs/make.jl
+          command: julia --project=docs/ docs/make.jl
       - persist_to_workspace:
           root: docs/build
           paths:
@@ -100,10 +107,13 @@ jobs:
             apt-get update
             apt-get install -y git
       - checkout
+
+      - restore_cache: *restore_julia
+      - run: *install_julia
+      - save_cache: *save_julia
+
       - attach_workspace:
           at: docs/build
       - run:
           name: Deploy documentation to GitHub pages
-          command: |
-            julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd()));Pkg.instantiate()'
-            julia --project=docs/ docs/deploy.jl
+          command: julia --project=docs/ docs/deploy.jl
