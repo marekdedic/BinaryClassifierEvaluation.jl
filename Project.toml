@@ -1,6 +1,6 @@
 name = "BinaryClassifierEvaluation"
 uuid = "319f26a8-c196-11e8-0fb2-7bd275fce67f"
-authors = ["GenaBitu <genabitu@gmail.com>"]
+authors = ["Marek Dědič <developer@dedic.eu>"]
 version = "0.1.0"
 
 [deps]
