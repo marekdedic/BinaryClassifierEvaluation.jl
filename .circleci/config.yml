@@ -57,8 +57,8 @@ job-references:
   install_julia_in_docs: &install_julia_in_docs
     name: Install Julia dependencies
     command: |
+      echo 'export PROJECT_CHECKSUM=$(sha256sum docs/Project.toml | cut -f1 -d\ | xxd -r -p | base64)' >> $BASH_ENV
       julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
-      echo 'export PROJECT_CHECKSUM=$(sha256sum docs/Project.toml | cut -f1 -d\  | xxd -r -p | base64)' >> $BASH_ENV
 
   save_julia_in_docs: &save_julia_in_docs
     key: deps-{{ checksum "Manifest.toml" }}-{{ .Environment.PROJECT_CHECKSUM }}
