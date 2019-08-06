@@ -4,7 +4,7 @@ makedocs(
 	format = Documenter.HTML(),
 	sitename = "BinaryClassifierEvaluation.jl",
 	modules = [BinaryClassifierEvaluation],
-	authors = ["Marek Dědič"],
+	authors = "Marek Dědič",
 	pages = Any[
 		"Home" => "index.md"
 	]
